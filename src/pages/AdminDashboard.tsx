@@ -12,6 +12,7 @@ import {
   UserPlus
 } from 'lucide-react';
 import AdminOverview from '@/components/Admin/AdminOverview';
+import MemberManagement from '@/components/Admin/MemberManagement';
 
 const AdminDashboard = () => {
   const sidebarItems = [
@@ -29,8 +30,8 @@ const AdminDashboard = () => {
     <MainLayout sidebarItems={sidebarItems} title="Admin Dashboard">
       <Routes>
         <Route path="/" element={<AdminOverview />} />
-        <Route path="/members" element={<div>Members Management</div>} />
-        <Route path="/add-member" element={<div>Add New Member</div>} />
+        <Route path="/members" element={<MemberManagement />} />
+        <Route path="/add-member" element={<MemberManagement />} />
         <Route path="/billing" element={<div>Billing Management</div>} />
         <Route path="/notifications" element={<div>Notifications Center</div>} />
         <Route path="/reports" element={<div>Reports & Analytics</div>} />
