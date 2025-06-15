@@ -13,6 +13,9 @@ import {
 } from 'lucide-react';
 import AdminOverview from '@/components/Admin/AdminOverview';
 import MemberManagement from '@/components/Admin/MemberManagement';
+import BillingManagement from '@/components/Admin/BillingManagement';
+import SupplementStore from '@/components/Admin/SupplementStore';
+import DietDetails from '@/components/Admin/DietDetails';
 
 const AdminDashboard = () => {
   const sidebarItems = [
@@ -32,11 +35,11 @@ const AdminDashboard = () => {
         <Route path="/" element={<AdminOverview />} />
         <Route path="/members" element={<MemberManagement />} />
         <Route path="/add-member" element={<MemberManagement />} />
-        <Route path="/billing" element={<div>Billing Management</div>} />
+        <Route path="/billing" element={<BillingManagement />} />
         <Route path="/notifications" element={<div>Notifications Center</div>} />
         <Route path="/reports" element={<div>Reports & Analytics</div>} />
-        <Route path="/supplements" element={<div>Supplement Store</div>} />
-        <Route path="/nutrition" element={<div>Diet & Nutrition</div>} />
+        <Route path="/supplements" element={<SupplementStore />} />
+        <Route path="/nutrition" element={<DietDetails />} />
       </Routes>
     </MainLayout>
   );
