@@ -16,6 +16,8 @@ import MemberManagement from '@/components/Admin/MemberManagement';
 import BillingManagement from '@/components/Admin/BillingManagement';
 import SupplementStore from '@/components/Admin/SupplementStore';
 import DietDetails from '@/components/Admin/DietDetails';
+import NotificationCenter from '@/components/Admin/NotificationCenter';
+import ReportExport from '@/components/Admin/ReportExport';
 
 const AdminDashboard = () => {
   const sidebarItems = [
@@ -36,8 +38,8 @@ const AdminDashboard = () => {
         <Route path="/members" element={<MemberManagement />} />
         <Route path="/add-member" element={<MemberManagement />} />
         <Route path="/billing" element={<BillingManagement />} />
-        <Route path="/notifications" element={<div>Notifications Center</div>} />
-        <Route path="/reports" element={<div>Reports & Analytics</div>} />
+        <Route path="/notifications" element={<NotificationCenter />} />
+        <Route path="/reports" element={<ReportExport />} />
         <Route path="/supplements" element={<SupplementStore />} />
         <Route path="/nutrition" element={<DietDetails />} />
       </Routes>

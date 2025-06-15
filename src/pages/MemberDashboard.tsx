@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import MemberOverview from '@/components/Member/MemberOverview';
 import BillReceipts from '@/components/Member/BillReceipts';
+import NotificationView from '@/components/Member/NotificationView';
 
 const MemberDashboard = () => {
   const sidebarItems = [
@@ -31,7 +32,7 @@ const MemberDashboard = () => {
         <Route path="/profile" element={<div>Member Profile</div>} />
         <Route path="/bills" element={<BillReceipts />} />
         <Route path="/billing" element={<div>My Bills & Payments</div>} />
-        <Route path="/notifications" element={<div>My Notifications</div>} />
+        <Route path="/notifications" element={<NotificationView />} />
         <Route path="/goals" element={<div>Fitness Goals</div>} />
         <Route path="/schedule" element={<div>Class Schedule</div>} />
       </Routes>
