@@ -26,8 +26,8 @@ const NotificationCenter = () => {
   const [newNotification, setNewNotification] = useState({
     title: '',
     message: '',
-    type: 'general' as const,
-    target_audience: 'all' as const,
+    type: 'general' as 'payment' | 'general' | 'announcement' | 'reminder',
+    target_audience: 'all' as 'all' | 'overdue' | 'specific',
     scheduled_date: ''
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -161,8 +161,8 @@ const NotificationCenter = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Select
               value={newNotification.type}
-              onValueChange={(value: 'payment' | 'general' | 'announcement' | 'reminder') => 
-                setNewNotification({...newNotification, type: value})
+              onValueChange={(value) => 
+                setNewNotification({...newNotification, type: value as 'payment' | 'general' | 'announcement' | 'reminder'})
               }
             >
               <SelectTrigger>
@@ -178,8 +178,8 @@ const NotificationCenter = () => {
 
             <Select
               value={newNotification.target_audience}
-              onValueChange={(value: 'all' | 'overdue' | 'specific') => 
-                setNewNotification({...newNotification, target_audience: value})
+              onValueChange={(value) => 
+                setNewNotification({...newNotification, target_audience: value as 'all' | 'overdue' | 'specific'})
               }
             >
               <SelectTrigger>
