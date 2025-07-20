@@ -10,6 +10,7 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName: string, role: UserRole) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 
@@ -103,6 +104,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
+  const signUp = async (email: string, password: string, fullName: string, role: UserRole) => {
+    logOperation('Sign Up Attempt', { email, role });
+    
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      logOperation('Sign Up Failed', { email, error: error.message });
+      return { error };
+    }
+
+    // Create profile after successful signup
+    if (data.user) {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: data.user.id,
+          email: email,
+          role: role,
+          full_name: fullName,
+        });
+
+      if (profileError) {
+        logOperation('Profile Creation Failed', { email, error: profileError.message });
+        return { error: profileError };
+      }
+    }
+
+    logOperation('Sign Up Success', { email, role });
+    return { error: null };
+  };
+
   const signOut = async () => {
     logOperation('Sign Out', { userId: user?.id });
     await supabase.auth.signOut();
@@ -117,6 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     profile,
     loading,
     signIn,
+    signUp,
     signOut,
   };
 
