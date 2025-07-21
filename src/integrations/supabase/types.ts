@@ -17,8 +17,10 @@ export type Database = {
       bills: {
         Row: {
           amount: number
+          billing_period: string | null
           created_at: string
           due_date: string
+          fee_package: string | null
           id: string
           member_id: string | null
           period_end: string
@@ -27,8 +29,10 @@ export type Database = {
         }
         Insert: {
           amount: number
+          billing_period?: string | null
           created_at?: string
           due_date: string
+          fee_package?: string | null
           id?: string
           member_id?: string | null
           period_end: string
@@ -37,8 +41,10 @@ export type Database = {
         }
         Update: {
           amount?: number
+          billing_period?: string | null
           created_at?: string
           due_date?: string
+          fee_package?: string | null
           id?: string
           member_id?: string | null
           period_end?: string
@@ -54,6 +60,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      diet_plans: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_weeks: number | null
+          id: string
+          meal_plan: Json | null
+          member_id: string
+          plan_name: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_weeks?: number | null
+          id?: string
+          meal_plan?: Json | null
+          member_id: string
+          plan_name: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_weeks?: number | null
+          id?: string
+          meal_plan?: Json | null
+          member_id?: string
+          plan_name?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       members: {
         Row: {
@@ -144,6 +186,39 @@ export type Database = {
           id?: string
           phone?: string | null
           role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      supplements: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          price: number
+          stock_quantity: number | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          price: number
+          stock_quantity?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          price?: number
+          stock_quantity?: number | null
           updated_at?: string
         }
         Relationships: []
