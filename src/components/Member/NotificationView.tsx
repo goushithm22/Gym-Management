@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase, logOperation } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import { logOperation } from '@/contexts/AuthContext';
 import { Bell, Calendar, CheckCircle } from 'lucide-react';
 
 interface Notification {

@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { supabase, logOperation } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import { logOperation } from '@/contexts/AuthContext';
 import { 
   FileText, 
   Download, 

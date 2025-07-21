@@ -11,7 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
-import { supabase, logOperation } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import { logOperation } from '@/contexts/AuthContext';
 import { Receipt, Plus, Search, FileText } from 'lucide-react';
 
 interface Bill {

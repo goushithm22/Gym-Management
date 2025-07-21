@@ -11,7 +11,7 @@ import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import MemberDashboard from "./pages/MemberDashboard";
 import ReceptionDashboard from "./pages/ReceptionDashboard";
-import { supabase } from "./lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
 

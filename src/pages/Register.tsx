@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuth } from '@/contexts/AuthContext';
 import { Dumbbell, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { UserRole } from '@/lib/supabase';
+import { UserRole } from '@/contexts/AuthContext';
 
 const Register = () => {
   const [email, setEmail] = useState('');

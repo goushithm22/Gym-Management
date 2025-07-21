@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { supabase, logOperation } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import { logOperation } from '@/contexts/AuthContext';
 import { Bell, Send, Calendar, Users, Plus } from 'lucide-react';
 
 interface Notification {

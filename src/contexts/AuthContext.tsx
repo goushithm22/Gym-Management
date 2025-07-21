@@ -1,7 +1,24 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase, UserRole, Profile, logOperation } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+
+export type UserRole = 'admin' | 'member' | 'reception';
+
+export interface Profile {
+  id: string;
+  email: string;
+  role: UserRole;
+  full_name?: string;
+  phone?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Logging utility for key operations
+export const logOperation = (operation: string, details: any = {}) => {
+  console.log(`[GYM_SYSTEM] ${new Date().toISOString()} - ${operation}:`, details);
+};
 
 interface AuthContextType {
   user: User | null;
@@ -78,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       setProfile(data);
-      setUserRole(data.role);
+      setUserRole(data.role as UserRole);
       logOperation('Profile Loaded', { userId, role: data.role });
     } catch (error) {
       console.error('Error in fetchUserProfile:', error);

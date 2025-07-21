@@ -14,6 +14,10 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
+  
+  const goToRegister = () => {
+    window.location.href = '/register';
+  };
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -106,7 +110,7 @@ const Login = () => {
             <p className="text-sm text-gray-500">
               Don't have an account?{' '}
               <button
-                onClick={() => window.location.href = '/register'}
+                onClick={goToRegister}
                 className="text-blue-600 hover:text-blue-700 font-medium"
               >
                 Sign up here

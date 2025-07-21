@@ -12,7 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
-import { supabase, logOperation } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import { logOperation } from '@/contexts/AuthContext';
 import { Apple, Plus, Edit, Trash2, Search } from 'lucide-react';
 
 interface DietPlan {
