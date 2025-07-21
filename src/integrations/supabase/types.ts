@@ -14,7 +14,140 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bills: {
+        Row: {
+          amount: number
+          created_at: string
+          due_date: string
+          id: string
+          member_id: string | null
+          period_end: string
+          period_start: string
+          status: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          due_date: string
+          id?: string
+          member_id?: string | null
+          period_end: string
+          period_start: string
+          status?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          due_date?: string
+          id?: string
+          member_id?: string | null
+          period_end?: string
+          period_start?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bills_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      members: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          join_date: string | null
+          package_type: string | null
+          phone: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          join_date?: string | null
+          package_type?: string | null
+          phone?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          join_date?: string | null
+          package_type?: string | null
+          phone?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          scheduled_date: string | null
+          target_audience: string | null
+          title: string
+          type: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          scheduled_date?: string | null
+          target_audience?: string | null
+          title: string
+          type?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          scheduled_date?: string | null
+          target_audience?: string | null
+          title?: string
+          type?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
