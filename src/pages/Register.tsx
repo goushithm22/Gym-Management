@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Dumbbell, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -175,6 +176,18 @@ const Register = () => {
               {loading ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
+          
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-500">
+              Already have an account?{' '}
+              <Link
+                to="/login"
+                className="text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Sign in here
+              </Link>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

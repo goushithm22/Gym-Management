@@ -30,7 +30,16 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode,
 };
 
 const AppRoutes = () => {
-  const { user, userRole } = useAuth();
+  const { user, userRole, loading } = useAuth();
+  
+  // Show loading while authentication state is being determined
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800">
+        <div className="text-white text-lg">Loading...</div>
+      </div>
+    );
+  }
   
   if (!user) {
     return <Login />;

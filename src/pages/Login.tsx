@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { Dumbbell, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,10 +15,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
-  
-  const goToRegister = () => {
-    window.location.href = '/register';
-  };
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -109,12 +106,12 @@ const Login = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
               Don't have an account?{' '}
-              <button
-                onClick={goToRegister}
+              <Link
+                to="/register"
                 className="text-blue-600 hover:text-blue-700 font-medium"
               >
                 Sign up here
-              </button>
+              </Link>
             </p>
             <div className="mt-4">
               <p className="text-sm text-gray-500">
