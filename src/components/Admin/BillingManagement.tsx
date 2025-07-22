@@ -17,13 +17,15 @@ import { Receipt, Plus, Search, FileText } from 'lucide-react';
 
 interface Bill {
   id: string;
-  member_id: string;
-  member_name: string;
+  member_id?: string;
+  member_name?: string;
   amount: number;
-  fee_package: string;
-  billing_period: string;
+  fee_package?: string;
+  billing_period?: string;
   due_date: string;
-  status: 'paid' | 'pending' | 'overdue';
+  period_start: string;
+  period_end: string;
+  status?: string;
   created_at: string;
 }
 
@@ -32,7 +34,10 @@ interface BillFormData {
   amount: number;
   fee_package: string;
   billing_period: string;
+  period_start: string;
+  period_end: string;
   due_date: string;
+  status: string;
 }
 
 const BillingManagement = () => {
@@ -93,8 +98,14 @@ const BillingManagement = () => {
       const { data, error } = await supabase
         .from('bills')
         .insert([{
-          ...billData,
-          status: 'pending',
+          member_id: billData.member_id,
+          amount: billData.amount,
+          fee_package: billData.fee_package,
+          billing_period: billData.billing_period,
+          period_start: billData.period_start || new Date().toISOString().split('T')[0],
+          period_end: billData.period_end || new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
+          due_date: billData.due_date,
+          status: 'pending'
         }])
         .select()
         .single();

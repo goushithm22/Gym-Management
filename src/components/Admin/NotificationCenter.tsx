@@ -46,7 +46,7 @@ const NotificationCenter = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setNotifications(data || []);
+      setNotifications((data || []).map(n => ({...n, status: n.status || 'active'})) as any);
       logOperation('Fetch Notifications', { count: data?.length });
     } catch (error) {
       console.error('Error fetching notifications:', error);

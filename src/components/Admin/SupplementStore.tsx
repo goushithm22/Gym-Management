@@ -64,7 +64,7 @@ const SupplementStore = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Supplement[];
+      return (data || []).map(s => ({...s, stock: s.stock_quantity || 0, status: s.status || 'active'})) as Supplement[];
     },
   });
 

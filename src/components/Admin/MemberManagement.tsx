@@ -65,7 +65,7 @@ const MemberManagement = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Member[];
+      return (data || []) as Member[];
     },
   });
 
