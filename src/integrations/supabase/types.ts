@@ -63,8 +63,10 @@ export type Database = {
       }
       diet_plans: {
         Row: {
+          calories_per_day: number | null
           created_at: string
           description: string | null
+          diet_type: string | null
           duration_weeks: number | null
           id: string
           meal_plan: Json | null
@@ -74,8 +76,10 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          calories_per_day?: number | null
           created_at?: string
           description?: string | null
+          diet_type?: string | null
           duration_weeks?: number | null
           id?: string
           meal_plan?: Json | null
@@ -85,8 +89,10 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          calories_per_day?: number | null
           created_at?: string
           description?: string | null
+          diet_type?: string | null
           duration_weeks?: number | null
           id?: string
           meal_plan?: Json | null
@@ -99,31 +105,37 @@ export type Database = {
       }
       members: {
         Row: {
+          address: string | null
           created_at: string
           email: string
           full_name: string
           id: string
           join_date: string | null
+          membership_type: string | null
           package_type: string | null
           phone: string | null
           status: string | null
         }
         Insert: {
+          address?: string | null
           created_at?: string
           email: string
           full_name: string
           id?: string
           join_date?: string | null
+          membership_type?: string | null
           package_type?: string | null
           phone?: string | null
           status?: string | null
         }
         Update: {
+          address?: string | null
           created_at?: string
           email?: string
           full_name?: string
           id?: string
           join_date?: string | null
+          membership_type?: string | null
           package_type?: string | null
           phone?: string | null
           status?: string | null
@@ -136,6 +148,7 @@ export type Database = {
           id: string
           message: string
           scheduled_date: string | null
+          status: string | null
           target_audience: string | null
           title: string
           type: string | null
@@ -145,6 +158,7 @@ export type Database = {
           id?: string
           message: string
           scheduled_date?: string | null
+          status?: string | null
           target_audience?: string | null
           title: string
           type?: string | null
@@ -154,6 +168,7 @@ export type Database = {
           id?: string
           message?: string
           scheduled_date?: string | null
+          status?: string | null
           target_audience?: string | null
           title?: string
           type?: string | null
@@ -198,6 +213,8 @@ export type Database = {
           id: string
           name: string
           price: number
+          status: string | null
+          stock: number | null
           stock_quantity: number | null
           updated_at: string
         }
@@ -208,6 +225,8 @@ export type Database = {
           id?: string
           name: string
           price: number
+          status?: string | null
+          stock?: number | null
           stock_quantity?: number | null
           updated_at?: string
         }
@@ -218,6 +237,8 @@ export type Database = {
           id?: string
           name?: string
           price?: number
+          status?: string | null
+          stock?: number | null
           stock_quantity?: number | null
           updated_at?: string
         }

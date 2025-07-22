@@ -65,7 +65,7 @@ const MemberManagement = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return (data || []) as Member[];
+      return (data || []).map(m => ({...m, address: m.address || '', membership_type: m.membership_type || 'basic'})) as any;
     },
   });
 
