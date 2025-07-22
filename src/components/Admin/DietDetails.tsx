@@ -65,16 +65,15 @@ const DietDetails = () => {
       logOperation('Fetch Diet Plans', {});
       const { data, error } = await supabase
         .from('diet_plans')
-        .select(`
-          *,
-          members (full_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data?.map(plan => ({
+      return (data || []).map(plan => ({
         ...plan,
-        member_name: plan.members?.full_name || 'Unknown'
+        member_name: 'Member', // Default since no relation exists
+        calories_per_day: plan.calories_per_day || 0,
+        diet_type: plan.diet_type || 'weight-loss'
       })) as DietPlan[];
     },
   });

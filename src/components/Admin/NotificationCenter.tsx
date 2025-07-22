@@ -82,7 +82,7 @@ const NotificationCenter = () => {
 
       if (error) throw error;
 
-      setNotifications([data, ...notifications]);
+      setNotifications([data as any, ...notifications]);
       setNewNotification({
         title: '',
         message: '',

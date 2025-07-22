@@ -94,7 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      setProfile(data);
+      setProfile(data as any);
       setUserRole(data.role as UserRole);
       logOperation('Profile Loaded', { userId, role: data.role });
     } catch (error) {

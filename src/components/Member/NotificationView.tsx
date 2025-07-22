@@ -45,7 +45,7 @@ const NotificationView = () => {
         read: Math.random() > 0.3 // Mock read status
       }));
       
-      setNotifications(notificationsWithReadStatus);
+      setNotifications(notificationsWithReadStatus as any);
       logOperation('Fetch Member Notifications', { count: data?.length });
     } catch (error) {
       console.error('Error fetching notifications:', error);
