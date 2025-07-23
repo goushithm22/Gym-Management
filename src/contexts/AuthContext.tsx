@@ -80,6 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserProfile = async (userId: string) => {
     try {
+      logOperation('Fetching Profile', { userId });
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -88,20 +89,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) {
         console.error('Error fetching profile:', error);
+        logOperation('Profile Error - Setting Default Role', { error: error.message });
         // For now, set a default role if profile doesn't exist
         setUserRole('member');
         setLoading(false);
         return;
       }
 
-      setProfile(data as any);
-      setUserRole(data.role as UserRole);
-      logOperation('Profile Loaded', { userId, role: data.role });
+      if (data) {
+        setProfile(data as any);
+        setUserRole(data.role as UserRole);
+        logOperation('Profile Loaded Successfully', { userId, role: data.role, profileData: data });
+      } else {
+        logOperation('No Profile Data - Setting Default Role');
+        setUserRole('member');
+      }
     } catch (error) {
       console.error('Error in fetchUserProfile:', error);
+      logOperation('Profile Fetch Exception', { error });
       setUserRole('member'); // Default role
     } finally {
       setLoading(false);
+      logOperation('Profile Fetch Complete - Loading Set to False');
     }
   };
 
