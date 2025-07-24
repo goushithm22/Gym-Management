@@ -1,37 +1,12 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-export type UserRole = 'admin' | 'member' | 'reception';
-
-export interface Profile {
-  id: string;
-  email: string;
-  role: UserRole;
-  full_name?: string;
-  phone?: string;
-  created_at: string;
-  updated_at: string;
-}
-
 // Logging utility for key operations
-export const logOperation = (operation: string, details: any = {}) => {
+export const logOperation = (operation, details = {}) => {
   console.log(`[GYM_SYSTEM] ${new Date().toISOString()} - ${operation}:`, details);
 };
 
-interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  userRole: UserRole | null;
-  profile: Profile | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, fullName: string, role: UserRole) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+const AuthContext = createContext({});
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -41,11 +16,11 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [userRole, setUserRole] = useState<UserRole | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [session, setSession] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -78,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (userId) => {
     try {
       logOperation('Fetching Profile', { userId });
       const { data, error } = await supabase
@@ -96,8 +71,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (data) {
-        setProfile(data as any);
-        setUserRole(data.role as UserRole);
+        setProfile(data);
+        setUserRole(data.role);
         logOperation('Profile Loaded Successfully', { userId, role: data.role, profileData: data });
       } else {
         logOperation('No Profile Data - Setting Default Role');
@@ -113,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email, password) => {
     logOperation('Sign In Attempt', { email });
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -129,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
-  const signUp = async (email: string, password: string, fullName: string, role: UserRole) => {
+  const signUp = async (email, password, fullName, role) => {
     logOperation('Sign Up Attempt', { email, role });
     
     const { data, error } = await supabase.auth.signUp({
