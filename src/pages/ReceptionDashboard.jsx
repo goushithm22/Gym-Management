@@ -1,6 +1,5 @@
-
 import { Routes, Route } from 'react-router-dom';
-import MainLayout from '@/components/Layout/MainLayout';
+import MainLayout from '@/components/Layout/MainLayout.jsx';
 import { 
   LayoutDashboard, 
   Search, 
@@ -8,8 +7,8 @@ import {
   UserCheck,
   Clock
 } from 'lucide-react';
-import ReceptionOverview from '@/components/Reception/ReceptionOverview';
-import MemberSearch from '@/components/Reception/MemberSearch';
+import ReceptionOverview from '@/components/Reception/ReceptionOverview.jsx';
+import MemberSearch from '@/components/Reception/MemberSearch.jsx';
 
 const ReceptionDashboard = () => {
   const sidebarItems = [

@@ -1,21 +1,20 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import AdminDashboard from "./pages/AdminDashboard";
-import MemberDashboard from "./pages/MemberDashboard";
-import ReceptionDashboard from "./pages/ReceptionDashboard";
+import { AuthProvider, useAuth } from "./contexts/AuthContext.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import MemberDashboard from "./pages/MemberDashboard.jsx";
+import ReceptionDashboard from "./pages/ReceptionDashboard.jsx";
 import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
 
-const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode, allowedRoles: string[] }) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, userRole } = useAuth();
   
   if (!user) {

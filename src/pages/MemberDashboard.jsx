@@ -1,6 +1,5 @@
-
 import { Routes, Route } from 'react-router-dom';
-import MainLayout from '@/components/Layout/MainLayout';
+import MainLayout from '@/components/Layout/MainLayout.jsx';
 import { 
   LayoutDashboard, 
   CreditCard, 
@@ -10,9 +9,9 @@ import {
   Calendar,
   Receipt
 } from 'lucide-react';
-import MemberOverview from '@/components/Member/MemberOverview';
-import BillReceipts from '@/components/Member/BillReceipts';
-import NotificationView from '@/components/Member/NotificationView';
+import MemberOverview from '@/components/Member/MemberOverview.jsx';
+import BillReceipts from '@/components/Member/BillReceipts.jsx';
+import NotificationView from '@/components/Member/NotificationView.jsx';
 
 const MemberDashboard = () => {
   const sidebarItems = [

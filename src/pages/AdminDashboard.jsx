@@ -1,6 +1,5 @@
-
 import { Routes, Route } from 'react-router-dom';
-import MainLayout from '@/components/Layout/MainLayout';
+import MainLayout from '@/components/Layout/MainLayout.jsx';
 import { 
   LayoutDashboard, 
   Users, 
@@ -11,13 +10,13 @@ import {
   Apple,
   UserPlus
 } from 'lucide-react';
-import AdminOverview from '@/components/Admin/AdminOverview';
-import MemberManagement from '@/components/Admin/MemberManagement';
-import BillingManagement from '@/components/Admin/BillingManagement';
-import SupplementStore from '@/components/Admin/SupplementStore';
-import DietDetails from '@/components/Admin/DietDetails';
-import NotificationCenter from '@/components/Admin/NotificationCenter';
-import ReportExport from '@/components/Admin/ReportExport';
+import AdminOverview from '@/components/Admin/AdminOverview.jsx';
+import MemberManagement from '@/components/Admin/MemberManagement.jsx';
+import BillingManagement from '@/components/Admin/BillingManagement.jsx';
+import SupplementStore from '@/components/Admin/SupplementStore.jsx';
+import DietDetails from '@/components/Admin/DietDetails.jsx';
+import NotificationCenter from '@/components/Admin/NotificationCenter.jsx';
+import ReportExport from '@/components/Admin/ReportExport.jsx';
 
 const AdminDashboard = () => {
   const sidebarItems = [

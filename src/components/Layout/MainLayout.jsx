@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext.jsx';
 import { Button } from '@/components/ui/button';
 import { 
   Menu, 
@@ -12,20 +11,9 @@ import {
   Sun,
   Bell
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast.js';
 
-interface MainLayoutProps {
-  children: React.ReactNode;
-  sidebarItems: Array<{
-    icon: React.ComponentType<any>;
-    label: string;
-    href: string;
-    active?: boolean;
-  }>;
-  title: string;
-}
-
-const MainLayout = ({ children, sidebarItems, title }: MainLayoutProps) => {
+const MainLayout = ({ children, sidebarItems, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const { signOut, user, userRole } = useAuth();
