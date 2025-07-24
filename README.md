@@ -1,73 +1,75 @@
-# Welcome to your Lovable project
+# 🚀 Shape Up
 
-## Project info
+> A centralized dashboard to manage Shape Up cycles, teams, pitches, and progress with clarity and precision.
 
-**URL**: https://lovable.dev/projects/320e4e7b-ebe5-444a-b568-93d2b85f6b68
+## 📌 Overview
 
-## How can I edit this code?
+**Shape Up: Command Center** is a modern web application built to help teams implement the **Shape Up methodology** by Basecamp. This tool simplifies the process of managing bets, cycles, pitches, and team responsibilities — all in one place.
 
-There are several ways of editing your application.
+## 🎯 Key Features
 
-**Use Lovable**
+- 🕒 **Cycle Management**: Visualize active, upcoming, and completed cycles.
+- 🧠 **Pitch Tracking**: Create, edit, and assign pitches to teams.
+- 👥 **Team Collaboration**: Track who’s working on what and when.
+- 📊 **Progress Overview**: View burndowns and delivery timelines at a glance.
+- 📝 **Shaping & Betting Board**: Plan pitches and document shaped work.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/320e4e7b-ebe5-444a-b568-93d2b85f6b68) and start prompting.
+## 🛠️ Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend**: React + TypeScript + TailwindCSS
+- **Backend**: Supabase (PostgreSQL + Auth + Realtime)
+- **State Management**: Zustand / React Context
+- **Deployment**: Vercel / Netlify / Custom
 
-**Use your preferred IDE**
+## 🚧 Project Structure
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+├── src/
+│   ├── components/        # UI Components
+│   ├── pages/             # Page views (Dashboard, Pitches, etc.)
+│   ├── hooks/             # Custom hooks
+│   ├── utils/             # Helper functions
+│   └── supabase/          # Supabase client setup
+├── public/                # Static assets
+├── .env                   # Environment variables (API keys etc.)
+├── bun.lockb              # Bun package lock
+└── README.md              # You're here!
 ```
 
-**Edit a file directly in GitHub**
+## 🔐 Environment Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create a `.env` file in the root with the following:
 
-**Use GitHub Codespaces**
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🧑‍💻 Getting Started
 
-## What technologies are used for this project?
+```bash
+# 1. Clone the repo
+git clone https://github.com/goushithm22/shape-up-command-center.git
 
-This project is built with:
+# 2. Install dependencies
+bun install
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# 3. Start development server
+bun run dev
+```
 
-## How can I deploy this project?
+> Don’t have Bun? Install it here: [https://bun.sh](https://bun.sh)
 
-Simply open [Lovable](https://lovable.dev/projects/320e4e7b-ebe5-444a-b568-93d2b85f6b68) and click on Share -> Publish.
+## 📚 Learn More
 
-## Can I connect a custom domain to my Lovable project?
+- [Shape Up by Basecamp](https://basecamp.com/shapeup)
+- [Supabase Docs](https://supabase.com/docs)
+- [Bun Runtime](https://bun.sh)
 
-Yes, you can!
+## 🤝 Contributions
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+PRs are welcome! Feel free to open an issue or submit a pull request.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 📄 License
+
+MIT © [M Goushith](https://github.com/goushithm22)
