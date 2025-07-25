@@ -10,6 +10,7 @@ import Register from "./pages/Register.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import MemberDashboard from "./pages/MemberDashboard.jsx";
 import ReceptionDashboard from "./pages/ReceptionDashboard.jsx";
+import Index from "./pages/Index.jsx";
 import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const AppRoutes = () => {
   
   // Redirect to appropriate dashboard based on role
   const getDashboardRoute = () => {
+    if (!user) return '/login';
     switch (userRole) {
       case 'admin':
         return '/admin';
@@ -50,7 +52,7 @@ const AppRoutes = () => {
       case 'reception':
         return '/reception';
       default:
-        return '/login';
+        return '/member'; // Default to member dashboard
     }
   };
   
@@ -64,7 +66,10 @@ const AppRoutes = () => {
         path="/register" 
         element={user ? <Navigate to={getDashboardRoute()} replace /> : <Register />} 
       />
-      <Route path="/" element={<Navigate to={getDashboardRoute()} replace />} />
+      <Route 
+        path="/" 
+        element={user ? <Navigate to={getDashboardRoute()} replace /> : <Navigate to="/login" replace />} 
+      />
       
       <Route 
         path="/admin/*" 
