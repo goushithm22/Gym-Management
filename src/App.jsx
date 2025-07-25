@@ -40,10 +40,6 @@ const AppRoutes = () => {
     );
   }
   
-  if (!user) {
-    return <Login />;
-  }
-  
   // Redirect to appropriate dashboard based on role
   const getDashboardRoute = () => {
     switch (userRole) {
@@ -60,8 +56,14 @@ const AppRoutes = () => {
   
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route 
+        path="/login" 
+        element={user ? <Navigate to={getDashboardRoute()} replace /> : <Login />} 
+      />
+      <Route 
+        path="/register" 
+        element={user ? <Navigate to={getDashboardRoute()} replace /> : <Register />} 
+      />
       <Route path="/" element={<Navigate to={getDashboardRoute()} replace />} />
       
       <Route 
