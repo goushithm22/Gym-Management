@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import { Button } from '@/components/ui/button';
 import { 
@@ -69,9 +70,9 @@ const MainLayout = ({ children, sidebarItems, title }) => {
         {/* Navigation */}
         <nav className="mt-6 px-3">
           {sidebarItems.map((item, index) => (
-            <a
+            <Link
               key={index}
-              href={item.href}
+              to={item.href}
               className={`flex items-center px-3 py-3 mb-2 text-sm font-medium rounded-lg transition-colors ${
                 item.active
                   ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
@@ -80,7 +81,7 @@ const MainLayout = ({ children, sidebarItems, title }) => {
             >
               <item.icon className="h-5 w-5 mr-3" />
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
