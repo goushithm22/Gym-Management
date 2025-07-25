@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }) => {
         logOperation('Profile Error - Setting Default Role', { error: error.message });
         // For now, set a default role if profile doesn't exist
         setUserRole('member');
+        setLoading(false);
         return;
       }
 
