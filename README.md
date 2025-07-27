@@ -51,20 +51,11 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 # 1. Clone the repo
 git clone https://github.com/goushithm22/shape-up-command-center.git
 
-# 2. Install dependencies
-bun install
-
-# 3. Start development server
-bun run dev
-```
-
-> Don’t have Bun? Install it here: [https://bun.sh](https://bun.sh)
 
 ## 📚 Learn More
 
 - [Shape Up by Basecamp](https://basecamp.com/shapeup)
 - [Supabase Docs](https://supabase.com/docs)
-- [Bun Runtime](https://bun.sh)
 
 ## 🤝 Contributions
 
