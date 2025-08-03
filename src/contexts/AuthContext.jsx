@@ -63,37 +63,36 @@ export const AuthProvider = ({ children }) => {
   const fetchUserProfile = async (userId) => {
     try {
       logOperation('Fetching Profile', { userId });
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
 
+      logOperation('Profile Query Complete', { hasData: !!data, hasError: !!error, error: error?.message });
+
       if (error) {
         console.error('Error fetching profile:', error);
         logOperation('Profile Error - Setting Default Role', { error: error.message });
-        // For now, set a default role if profile doesn't exist
         setUserRole('member');
-        setLoading(false);
-        return;
-      }
-
-      if (data) {
+      } else if (data) {
         setProfile(data);
         setUserRole(data.role);
-        logOperation('Profile Loaded Successfully', { userId, role: data.role, profileData: data });
+        logOperation('Profile Loaded Successfully', { userId, role: data.role });
       } else {
         logOperation('No Profile Data - Setting Default Role');
         setUserRole('member');
       }
-      
-      setLoading(false);
     } catch (error) {
       console.error('Error in fetchUserProfile:', error);
-      logOperation('Profile Fetch Exception', { error });
-      setUserRole('member'); // Default role
-      setLoading(false);
+      logOperation('Profile Fetch Exception', { error: error.message });
+      setUserRole('member');
     }
+    
+    // Always set loading to false
+    setLoading(false);
+    logOperation('Loading Set to False');
   };
 
   const signIn = async (email, password) => {
