@@ -26,13 +26,19 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      logOperation('Initial Session Check', { hasSession: !!session, userId: session?.user?.id });
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchUserProfile(session.user.id);
       } else {
+        logOperation('No Initial Session - Setting Loading False');
         setLoading(false);
       }
+    }).catch((error) => {
+      console.error('Error getting initial session:', error);
+      logOperation('Session Check Error', { error: error.message });
+      setLoading(false);
     });
 
     // Listen for auth changes
@@ -47,6 +53,7 @@ export const AuthProvider = ({ children }) => {
         setUserRole(null);
         setProfile(null);
         setLoading(false);
+        logOperation('Auth State Change - No User, Loading Set False');
       }
     });
 
