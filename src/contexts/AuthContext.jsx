@@ -24,40 +24,54 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Failsafe: Always clear loading after 5 seconds
+    const loadingTimeout = setTimeout(() => {
+      logOperation('Loading Timeout - Force Clear Loading');
+      setLoading(false);
+    }, 5000);
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       logOperation('Initial Session Check', { hasSession: !!session, userId: session?.user?.id });
       setSession(session);
       setUser(session?.user ?? null);
+      
       if (session?.user) {
         fetchUserProfile(session.user.id);
       } else {
         logOperation('No Initial Session - Setting Loading False');
         setLoading(false);
+        clearTimeout(loadingTimeout);
       }
     }).catch((error) => {
       console.error('Error getting initial session:', error);
       logOperation('Session Check Error', { error: error.message });
       setLoading(false);
+      clearTimeout(loadingTimeout);
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       logOperation('Auth State Change', { event, userId: session?.user?.id });
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        await fetchUserProfile(session.user.id);
+        // Don't await here to prevent blocking
+        fetchUserProfile(session.user.id);
       } else {
         setUserRole(null);
         setProfile(null);
         setLoading(false);
+        clearTimeout(loadingTimeout);
         logOperation('Auth State Change - No User, Loading Set False');
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(loadingTimeout);
+    };
   }, []);
 
   const fetchUserProfile = async (userId) => {
