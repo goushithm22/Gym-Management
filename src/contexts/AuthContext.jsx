@@ -79,13 +79,13 @@ export const AuthProvider = ({ children }) => {
         logOperation('No Profile Data - Setting Default Role');
         setUserRole('member');
       }
+      
+      setLoading(false);
     } catch (error) {
       console.error('Error in fetchUserProfile:', error);
       logOperation('Profile Fetch Exception', { error });
       setUserRole('member'); // Default role
-    } finally {
       setLoading(false);
-      logOperation('Profile Fetch Complete - Loading Set to False');
     }
   };
 
