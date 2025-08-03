@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import ReceptionOverview from '@/components/Reception/ReceptionOverview.jsx';
 import MemberSearch from '@/components/Reception/MemberSearch.jsx';
+import MemberDirectory from '@/components/Reception/MemberDirectory.jsx';
 
 const ReceptionDashboard = () => {
   const sidebarItems = [
@@ -24,7 +25,7 @@ const ReceptionDashboard = () => {
       <Routes>
         <Route path="/" element={<ReceptionOverview />} />
         <Route path="/search" element={<MemberSearch />} />
-        <Route path="/members" element={<div>Member Directory</div>} />
+        <Route path="/members" element={<MemberDirectory />} />
         <Route path="/checkins" element={<div>Member Check-ins</div>} />
         <Route path="/logs" element={<div>Visit Logs</div>} />
       </Routes>
