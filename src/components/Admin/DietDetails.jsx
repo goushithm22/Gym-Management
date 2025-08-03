@@ -1,406 +1,448 @@
-
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { AuthProvider, useAuth } from "./contexts/AuthContext.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
-import MemberDashboard from "./pages/MemberDashboard.jsx";
-import ReceptionDashboard from "./pages/ReceptionDashboard.jsx";
-import Index from "./pages/Index.jsx";
-import { supabase } from "@/integrations/supabase/client";
-
-const queryClient = new QueryClient();
-
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, userRole } = useAuth();
-  
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  
-  if (!allowedRoles.includes(userRole || '')) {
-    return <Navigate to="/unauthorized" replace />;
-  }
-  
-  return <>{children}</>;
-};
-
-const AppRoutes = () => {
-  const { user, userRole, loading } = useAuth();
-  
-  // Show loading while authentication state is being determined
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800">
-        <div className="text-white text-lg">Loading...</div>
-      </div>
-    );
-  }
-  
-  // Redirect to appropriate dashboard based on role
-  const getDashboardRoute = () => {
-    if (!user) return '/login';
-    switch (userRole) {
-      case 'admin':
-        return '/admin';
-      case 'member':
-        return '/member';
-      case 'reception':
-        return '/reception';
-      default:
-        return '/member'; // Default to member dashboard
-    }
-  };
-  
-  return (
-    <Routes>
-      <Route 
-        path="/login" 
-        element={user ? <Navigate to={getDashboardRoute()} replace /> : <Login />} 
-      />
-      <Route 
-        path="/register" 
-        element={user ? <Navigate to={getDashboardRoute()} replace /> : <Register />} 
-      />
-      <Route 
-        path="/" 
-        element={user ? <Navigate to={getDashboardRoute()} replace /> : <Navigate to="/login" replace />} 
-      />
-      
-      <Route 
-        path="/admin/*" 
-        element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/member/*" 
-        element={
-          <ProtectedRoute allowedRoles={['member']}>
-            <MemberDashboard />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path="/reception/*" 
-        element={
-          <ProtectedRoute allowedRoles={['reception']}>
-            <ReceptionDashboard />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route path="/unauthorized" element={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100"><div className="text-center"><h1 className="text-2xl font-bold text-gray-800">Unauthorized Access</h1><p className="text-gray-600">You don't have permission to access this page.</p></div></div>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  );
-};
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
-
-export default App;
-
-
-/*
 import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast.js';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { useForm } from 'react-hook-form';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { logOperation } from '@/contexts/AuthContext.jsx';
-import { 
-  FileText, 
-  Download, 
-  Calendar, 
-  Users, 
-  DollarSign, 
-  Package,
-  TrendingUp
-} from 'lucide-react';
+import { Apple, Plus, Edit, Trash2, Search, Clock } from 'lucide-react';
 
-const ReportExport = () => {
-  const [reportType, setReportType] = useState('');
-  const [dateRange, setDateRange] = useState({
-    startDate: '',
-    endDate: ''
-  });
-  const [isGenerating, setIsGenerating] = useState(false);
+const DietDetails = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingDiet, setEditingDiet] = useState(null);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  const reportTypes = [
-    { value: 'members', label: 'Member Report', icon: Users, description: 'Complete member information and statistics' },
-    { value: 'billing', label: 'Billing Report', icon: DollarSign, description: 'Payment history and revenue analysis' },
-    { value: 'supplements', label: 'Supplement Sales', icon: Package, description: 'Supplement store sales data' },
-    { value: 'attendance', label: 'Attendance Report', icon: TrendingUp, description: 'Member visit patterns and trends' }
-  ];
+  const form = useForm({
+    defaultValues: {
+      name: '',
+      description: '',
+      meal_type: 'breakfast',
+      calories: 0,
+      protein: 0,
+      carbs: 0,
+      fats: 0,
+      instructions: '',
+      status: 'active',
+    },
+  });
 
-  const generateReport = async () => {
-    if (!reportType) {
-      toast({
-        title: "Error",
-        description: "Please select a report type",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsGenerating(true);
-    
-    try {
-      let data, filename;
+  // Fetch diet plans
+  const { data: dietPlans = [], isLoading } = useQuery({
+    queryKey: ['diet-plans'],
+    queryFn: async () => {
+      logOperation('Fetch Diet Plans', {});
+      const { data, error } = await supabase
+        .from('diet_plans')
+        .select('*')
+        .order('created_at', { ascending: false });
       
-      switch (reportType) {
-        case 'members':
-          const { data: membersData } = await supabase
-            .from('members')
-            .select('*')
-            .order('created_at', { ascending: false });
-          data = membersData;
-          filename = 'members-report';
-          break;
-          
-        case 'billing':
-          const { data: billsData } = await supabase
-            .from('bills')
-            .select(`
-              *,
-              members (full_name, email)
-            `)
-            .order('created_at', { ascending: false });
-          data = billsData;
-          filename = 'billing-report';
-          break;
-          
-        case 'supplements':
-          const { data: supplementsData } = await supabase
-            .from('supplements')
-            .select('*')
-            .order('created_at', { ascending: false });
-          data = supplementsData;
-          filename = 'supplements-report';
-          break;
-          
-        default:
-          data = [];
-          filename = 'report';
-      }
+      if (error) throw error;
+      return data || [];
+    },
+  });
 
-      // Generate CSV
-      if (data && data.length > 0) {
-        const csv = generateCSV(data);
-        downloadCSV(csv, `${filename}-${new Date().toISOString().split('T')[0]}.csv`);
-        
-        logOperation('Generate Report', { 
-          type: reportType, 
-          recordCount: data.length,
-          dateRange: dateRange 
-        });
-        
-        toast({
-          title: "Success",
-          description: "Report generated and downloaded successfully",
-        });
-      } else {
-        toast({
-          title: "Info",
-          description: "No data found for the selected criteria",
-        });
-      }
-    } catch (error) {
-      console.error('Error generating report:', error);
+  // Add diet plan mutation
+  const addDietMutation = useMutation({
+    mutationFn: async (dietData) => {
+      logOperation('Add Diet Plan', { name: dietData.name });
+      const { data, error } = await supabase
+        .from('diet_plans')
+        .insert([dietData])
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['diet-plans'] });
+      setIsAddDialogOpen(false);
+      form.reset();
       toast({
-        title: "Error",
-        description: "Failed to generate report",
+        title: "Diet plan added successfully",
+        description: "New diet plan has been created.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error adding diet plan",
+        description: error.message,
         variant: "destructive",
       });
-    } finally {
-      setIsGenerating(false);
+    },
+  });
+
+  // Update diet plan mutation
+  const updateDietMutation = useMutation({
+    mutationFn: async ({ id, data }) => {
+      logOperation('Update Diet Plan', { dietId: id });
+      const { error } = await supabase
+        .from('diet_plans')
+        .update(data)
+        .eq('id', id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['diet-plans'] });
+      setEditingDiet(null);
+      form.reset();
+      toast({
+        title: "Diet plan updated successfully",
+        description: "Diet plan information has been updated.",
+      });
+    },
+  });
+
+  // Delete diet plan mutation
+  const deleteDietMutation = useMutation({
+    mutationFn: async (id) => {
+      logOperation('Delete Diet Plan', { dietId: id });
+      const { error } = await supabase
+        .from('diet_plans')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['diet-plans'] });
+      toast({
+        title: "Diet plan deleted successfully",
+        description: "Diet plan has been removed.",
+      });
+    },
+  });
+
+  const onSubmit = (data) => {
+    if (editingDiet) {
+      updateDietMutation.mutate({ id: editingDiet.id, data });
+    } else {
+      addDietMutation.mutate(data);
     }
   };
 
-  const generateCSV = (data) => {
-    if (!data.length) return '';
-    
-    const headers = Object.keys(data[0]).join(',');
-    const rows = data.map(row => 
-      Object.values(row).map(value => 
-        typeof value === 'string' ? `"${value.replace(/"/g, '""')}"` : value
-      ).join(',')
-    ).join('\n');
-    
-    return `${headers}\n${rows}`;
+  const handleEdit = (diet) => {
+    setEditingDiet(diet);
+    form.reset({
+      name: diet.name,
+      description: diet.description,
+      meal_type: diet.meal_type,
+      calories: diet.calories,
+      protein: diet.protein,
+      carbs: diet.carbs,
+      fats: diet.fats,
+      instructions: diet.instructions,
+      status: diet.status,
+    });
   };
 
-  const downloadCSV = (csvContent, filename) => {
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', filename);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  const handleDelete = (id) => {
+    if (confirm('Are you sure you want to delete this diet plan?')) {
+      deleteDietMutation.mutate(id);
+    }
+  };
+
+  const filteredDietPlans = dietPlans.filter(diet =>
+    diet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    diet.meal_type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getMealTypeColor = (type) => {
+    switch (type) {
+      case 'breakfast': return 'bg-yellow-100 text-yellow-800';
+      case 'lunch': return 'bg-orange-100 text-orange-800';
+      case 'dinner': return 'bg-blue-100 text-blue-800';
+      case 'snack': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-xl p-6 text-white">
-        <h2 className="text-2xl font-bold mb-2">Reports & Analytics</h2>
-        <p className="text-green-100">Generate and export comprehensive reports for your gym.</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold">Diet Plans</h2>
+          <p className="text-muted-foreground">Manage nutrition plans for members</p>
+        </div>
+        <Dialog open={isAddDialogOpen || !!editingDiet} onOpenChange={(open) => {
+          if (!open) {
+            setIsAddDialogOpen(false);
+            setEditingDiet(null);
+            form.reset();
+          }
+        }}>
+          <DialogTrigger asChild>
+            <Button onClick={() => setIsAddDialogOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Diet Plan
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>{editingDiet ? 'Edit Diet Plan' : 'Add New Diet Plan'}</DialogTitle>
+              <DialogDescription>
+                {editingDiet ? 'Update diet plan information' : 'Create a new nutrition plan for members'}
+              </DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Plan Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter plan name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="meal_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Meal Type</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select meal type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="breakfast">Breakfast</SelectItem>
+                            <SelectItem value="lunch">Lunch</SelectItem>
+                            <SelectItem value="dinner">Dinner</SelectItem>
+                            <SelectItem value="snack">Snack</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Enter description" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-4 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="calories"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Calories</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="0" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="protein"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Protein (g)</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="0" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="carbs"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Carbs (g)</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="0" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="fats"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Fats (g)</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="0" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="instructions"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Instructions</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Enter cooking/preparation instructions" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex justify-end space-x-2">
+                  <Button type="button" variant="outline" onClick={() => {
+                    setIsAddDialogOpen(false);
+                    setEditingDiet(null);
+                    form.reset();
+                  }}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={addDietMutation.isPending || updateDietMutation.isPending}>
+                    {editingDiet ? 'Update' : 'Add'} Diet Plan
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Generate Report
-          </CardTitle>
-          <CardDescription>Select report type and date range to generate export</CardDescription>
+          <CardTitle>Diet Plans Management</CardTitle>
+          <CardDescription>
+            <div className="flex items-center space-x-2">
+              <Search className="h-4 w-4" />
+              <Input
+                placeholder="Search diet plans by name or meal type..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="max-w-sm"
+              />
+            </div>
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Report Type Selection */} /*
-          <div className="space-y-4">
-            <label className="text-sm font-medium">Report Type</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {reportTypes.map((type) => (
-                <div
-                  key={type.value}
-                  className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                    reportType === type.value 
-                      ? 'border-blue-500 bg-blue-50' 
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                  onClick={() => setReportType(type.value)}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`p-2 rounded-lg ${
-                      reportType === type.value 
-                        ? 'bg-blue-500 text-white' 
-                        : 'bg-gray-100 text-gray-600'
-                    }`}>
-                      <type.icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">{type.label}</h3>
-                      <p className="text-sm text-gray-600">{type.description}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Date Range */} /*
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium">Start Date</label>
-              <Input
-                type="date"
-                value={dateRange.startDate}
-                onChange={(e) => setDateRange({...dateRange, startDate: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">End Date</label>
-              <Input
-                type="date"
-                value={dateRange.endDate}
-                onChange={(e) => setDateRange({...dateRange, endDate: e.target.value})}
-              />
-            </div>
-          </div>
-
-          <Button 
-            onClick={generateReport} 
-            disabled={isGenerating || !reportType}
-            className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            {isGenerating ? 'Generating...' : 'Generate & Download Report'}
-          </Button>
+        <CardContent>
+          {isLoading ? (
+            <div className="text-center py-4">Loading diet plans...</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Plan Name</TableHead>
+                  <TableHead>Meal Type</TableHead>
+                  <TableHead>Nutrition</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredDietPlans.map((diet) => (
+                  <TableRow key={diet.id}>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium">{diet.name}</p>
+                        <p className="text-sm text-muted-foreground">{diet.description}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={getMealTypeColor(diet.meal_type)}>
+                        {diet.meal_type}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        <p>{diet.calories} cal</p>
+                        <p className="text-muted-foreground">
+                          P: {diet.protein}g | C: {diet.carbs}g | F: {diet.fats}g
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={diet.status === 'active' ? 'default' : 'secondary'}>
+                        {diet.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(diet)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDelete(diet.id)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
-
-      {/* Quick Stats */} /*
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Total Members</p>
-                <p className="text-2xl font-bold">1,234</p>
-              </div>
-              <Users className="h-8 w-8 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Monthly Revenue</p>
-                <p className="text-2xl font-bold">$45,600</p>
-              </div>
-              <DollarSign className="h-8 w-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Supplement Sales</p>
-                <p className="text-2xl font-bold">$2,340</p>
-              </div>
-              <Package className="h-8 w-8 text-purple-500" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Avg. Attendance</p>
-                <p className="text-2xl font-bold">89/day</p>
-              </div>
-              <TrendingUp className="h-8 w-8 text-orange-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 };
 
-export default ReportExport; */
-
+export default DietDetails;
