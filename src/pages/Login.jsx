@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import { Dumbbell, Eye, EyeOff } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast.js';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
@@ -14,7 +13,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
-  const { toast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,11 +21,8 @@ const Login = () => {
     const { error } = await signIn(email, password);
 
     if (error) {
-      toast({
-        title: "Login Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      // Simple alert instead of toast to avoid hook issues
+      alert(`Login Failed: ${error.message}`);
     }
 
     setLoading(false);
