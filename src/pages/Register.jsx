@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import { Dumbbell, Eye, EyeOff } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast.js';
 import { Link } from 'react-router-dom';
 
 const Register = () => {
@@ -18,26 +17,17 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
-  const { toast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      toast({
-        title: "Password Mismatch",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
+      alert("Password Mismatch: Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      toast({
-        title: "Password Too Short",
-        description: "Password must be at least 6 characters",
-        variant: "destructive",
-      });
+      alert("Password Too Short: Password must be at least 6 characters");
       return;
     }
 
@@ -46,16 +36,9 @@ const Register = () => {
     const { error } = await signUp(email, password, fullName, role);
 
     if (error) {
-      toast({
-        title: "Registration Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      alert(`Registration Failed: ${error.message}`);
     } else {
-      toast({
-        title: "Registration Successful",
-        description: "Please check your email to verify your account",
-      });
+      alert("Registration Successful: Please check your email to verify your account");
     }
 
     setLoading(false);
