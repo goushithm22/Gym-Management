@@ -165,8 +165,11 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     logOperation('Sign Out', { userId: user?.id });
     await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
     setUserRole(null);
     setProfile(null);
+    setLoading(false);
   };
 
   const value = {

@@ -110,7 +110,7 @@ const MainLayout = ({ children, sidebarItems, title }) => {
       </div>
 
       {/* Main Content */}
-      <div className="lg:ml-64 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col lg:ml-64">
         {/* Top Header */}
         <header className="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-6">
           <div className="flex items-center">
