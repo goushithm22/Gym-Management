@@ -34,11 +34,11 @@ const MainLayout = ({ children, sidebarItems, title }) => {
   };
 
   return (
-    <div className={`min-h-screen bg-gray-50 ${darkMode ? 'dark' : ''}`}>
+    <div className={`min-h-screen bg-gray-50 flex ${darkMode ? 'dark' : ''}`}>
       {/* Sidebar */}
       <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } lg:translate-x-0 lg:static lg:inset-0`}>
+      } lg:translate-x-0 lg:relative lg:transform-none lg:shadow-none`}>
         
         {/* Sidebar Header */}
         <div className="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
@@ -110,7 +110,7 @@ const MainLayout = ({ children, sidebarItems, title }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:ml-64">
+      <div className="flex-1 flex flex-col min-h-screen">
         {/* Top Header */}
         <header className="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-6">
           <div className="flex items-center">
