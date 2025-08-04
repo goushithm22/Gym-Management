@@ -7,9 +7,30 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast"
+import { useEffect, useState } from "react"
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const [isClient, setIsClient] = useState(false)
+  
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+  
+  let toasts = []
+  
+  try {
+    if (isClient) {
+      const { toasts: hookToasts } = useToast()
+      toasts = hookToasts || []
+    }
+  } catch (error) {
+    console.warn('Toast hook error:', error)
+    toasts = []
+  }
+
+  if (!isClient) {
+    return null
+  }
 
   return (
     <ToastProvider>

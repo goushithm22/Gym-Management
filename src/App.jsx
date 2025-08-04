@@ -110,7 +110,6 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <AppRoutes />
-          <Toaster />
           <Sonner />
         </BrowserRouter>
       </AuthProvider>
