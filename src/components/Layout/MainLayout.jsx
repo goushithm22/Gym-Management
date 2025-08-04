@@ -12,20 +12,17 @@ import {
   Sun,
   Bell
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast.js';
+
 
 const MainLayout = ({ children, sidebarItems, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const { signOut, user, userRole } = useAuth();
-  const { toast } = useToast();
 
   const handleSignOut = async () => {
     await signOut();
-    toast({
-      title: "Signed out successfully",
-      description: "You have been logged out of your account.",
-    });
+    // Simple alert instead of toast to avoid hook issues
+    alert("Signed out successfully");
   };
 
   const toggleDarkMode = () => {
