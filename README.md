@@ -4,7 +4,7 @@
 
 ## 📌 Overview
 
-**Shape Up: Command Center** is a modern web application built to help teams implement the **Shape Up methodology** by Basecamp. This tool simplifies the process of managing bets, cycles, pitches, and team responsibilities — all in one place.
+**Gym-Management: Command Center** is a modern web application built to help teams implement the **Shape Up methodology** by Basecamp. This tool simplifies the process of managing bets, cycles, pitches, and team responsibilities — all in one place.
 
 ## 🎯 Key Features
 
@@ -49,7 +49,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/goushithm22/shape-up-command-center.git
+git clone https://github.com/goushithm22/Gym-Management.git
 
 
 ## 📚 Learn More
