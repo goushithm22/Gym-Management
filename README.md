@@ -1,4 +1,4 @@
-# 🚀 Shape Up
+# 🚀 Gym Management System
 
 > A centralized dashboard to manage Shape Up cycles, teams, pitches, and progress with clarity and precision.
 
